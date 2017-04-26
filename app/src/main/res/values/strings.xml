@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Phonedroid</string>
+    <string name="edit_message">Enter a Message</string>
+    <string name="button_send">Send</string>
+    <string name="button_forward">Forward</string>
+    <string name="button_brake">Brake</string>
+    <string name="button_reverse">Reverse</string>
+    <string name="button_clockwise">Clockwise Rotation</string>
+    <string name="button_counterclockwise">Counterclockwise Rotation</string>
+</resources>
