@@ -7,4 +7,5 @@
     <string name="button_reverse">Reverse</string>
     <string name="button_clockwise">Clockwise Rotation</string>
     <string name="button_counterclockwise">Counterclockwise Rotation</string>
+    <string name="button_discover_bluetooth">Find Bluetooth devices</string>
 </resources>
