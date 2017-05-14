@@ -16,13 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
 public class BluetoothDiscoveryActivity extends AppCompatActivity {
     private int REQUEST_ENABLE_BT = 1;
+    private ListView deviceListView;
 
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 //    if (mBluetoothAdapter == null) {
@@ -38,7 +38,7 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, discoveryArray);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        deviceListView = (ListView) findViewById(R.id.deviceListView);
 //        listView.setAdapter(adapter);
 
 
@@ -48,12 +48,7 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        // Register for broadcasts when a device is discovered.
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
-        registerReceiver(mReceiver, filter);
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -65,19 +60,19 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName();
 
-                if (device.getName() != null) {
-                    discoveryArray.add(device.getName());
+                if (deviceName != null) {
+                    Log.d("BluetoothClass", "Device Name: " + deviceName);
                 } else {
                     System.out.println("Problem getting device name.");
                 }
-//                // right now, we're only looking for ALPHA, so . . .
-//                String deviceName = device.getName();
-//                if (deviceName == "ALPHA") {
-//                    String deviceHardwareAddress = device.getAddress(); // MAC address
-//                    mBluetoothAdapter.cancelDiscovery();
-//                    startConnection(device);
-//                }
+                // right now, we're only looking for ALPHA, so . . .
+                if (deviceName == "ALPHA") {
+                    String deviceHardwareAddress = device.getAddress(); // MAC address
+                    mBluetoothAdapter.cancelDiscovery();
+                    startConnection(device);
+                }
             }
         }
     };
@@ -98,6 +93,14 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
         }
+
+        // Register for broadcasts when a device is discovered.
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+        registerReceiver(mReceiver, filter);
+
         mBluetoothAdapter.startDiscovery();
         Log.d("BluetoothClass", "starting discovery . . .");
     }
@@ -112,6 +115,9 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
         try {
             BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
             socket.connect();
+            if (socket.isConnected()) {
+                Log.d("BluetoothClass", "Connected to " + device.getName());
+            }
         } catch(IOException e) {
             System.out.println(e.getMessage());
         }
