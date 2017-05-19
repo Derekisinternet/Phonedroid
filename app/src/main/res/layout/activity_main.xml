@@ -31,11 +31,20 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="@string/button_forward"
+        tools:layout_editor_absoluteX="183dp"
+        tools:layout_editor_absoluteY="118dp" />
+
+    <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="91dp"
+        android:layout_marginLeft="183dp"
+        android:layout_marginTop="89dp"
         android:background="@android:color/holo_red_dark"
         android:onClick="sendCommand"
         android:text="@string/button_brake"
@@ -49,8 +58,38 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
+        android:background="@android:color/darker_gray"
         android:onClick="discoverBluetooth"
         android:text="@string/button_discover_bluetooth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="@string/button_reverse"
+        tools:layout_editor_absoluteX="183dp"
+        tools:layout_editor_absoluteY="249dp" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="@string/button_clockwise"
+        tools:layout_editor_absoluteX="282dp"
+        tools:layout_editor_absoluteY="182dp"
+        tools:text="Clockwise" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="36dp"
+        android:background="@android:color/holo_green_dark"
+        android:text="Counterclockwise"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="182dp" />
 </android.support.constraint.ConstraintLayout>

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void discoverBluetooth(View view) {
         Intent intent = new Intent(this, BluetoothDiscoveryActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     public void sendCommand(View view) {
