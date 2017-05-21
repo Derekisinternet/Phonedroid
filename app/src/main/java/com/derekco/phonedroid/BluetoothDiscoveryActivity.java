@@ -148,7 +148,7 @@ public class BluetoothDiscoveryActivity extends AppCompatActivity {
                 Log.d("BluetoothClass", "Connected to " + device.getName());
             }
             //TODO: figure out best practices for response codes . . .
-            finishActivity(1);
+            finish();
         } catch(IOException e) {
             System.out.println(e.getMessage());
         }
