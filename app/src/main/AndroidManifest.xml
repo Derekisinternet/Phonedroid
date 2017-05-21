@@ -29,7 +29,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".SendCommandActivity" />
-        <activity android:name=".BluetoothDiscoveryActivity"></activity>
+        <activity android:name=".DeviceListActivity"></activity>
     </application>
 
 </manifest>
