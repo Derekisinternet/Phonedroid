@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendForwardCommand(View view) {
+
         Log.d("Main", "Forward Button Press!");
 
     }
