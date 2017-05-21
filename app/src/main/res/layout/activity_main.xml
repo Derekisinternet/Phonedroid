@@ -84,17 +84,19 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_green_dark"
         android:text="@string/button_clockwise"
-        tools:layout_editor_absoluteY="182dp"
         tools:text="Clockwise"
         app:layout_constraintLeft_toRightOf="@+id/button2"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="27dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="182dp" />
 
     <Button
         android:id="@+id/button8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Counterclockwise"
-        tools:layout_editor_absoluteY="182dp"
         android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="182dp"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
