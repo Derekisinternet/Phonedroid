@@ -301,6 +301,10 @@ public class ManualControlFragment extends Fragment {
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
                 return true;
             }
+            case R.id.disconnect: {
+                disconnectDevice();
+                return true;
+            }
             case R.id.discoverable: {
                 // Ensure this device is discoverable by others
                 ensureDiscoverable();
@@ -308,6 +312,13 @@ public class ManualControlFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    private void disconnectDevice() {
+        if (mBluetoothService.getState() == BluetoothAdapter.STATE_CONNECTED) {
+            mBluetoothService.stop();
+            Log.d(TAG, "stopping connection.");
+        }
     }
 
     /**
