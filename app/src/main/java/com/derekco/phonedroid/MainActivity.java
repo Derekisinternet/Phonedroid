@@ -67,12 +67,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public void sendMessage(View view) {
-        // do something on button press
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String message = editText.getText().toString();
-        // mBluetoothService.write(message.getBytes());
-        editText.setText("");
-    }
 }

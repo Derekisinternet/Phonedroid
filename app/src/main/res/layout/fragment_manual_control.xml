@@ -6,14 +6,11 @@
         android:id="@+id/button_forward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="151dp"
-        android:layout_marginStart="151dp"
-        android:layout_marginTop="157dp"
+        android:layout_marginTop="101dp"
         android:onClick="sendForwardCommand"
-        android:text="Forward" />
+        android:text="Forward"
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/button_stop"
@@ -60,5 +57,15 @@
         android:layout_toStartOf="@+id/button_stop"
         android:onClick="sendCounterClockwiseCommand"
         android:text="Left" />
+
+    <SeekBar
+        android:id="@+id/speedBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:progress="40"
+        android:max="255"/>
 
 </RelativeLayout>

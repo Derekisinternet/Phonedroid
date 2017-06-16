@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 /**
@@ -39,6 +40,7 @@ public class ManualControlFragment extends Fragment {
     private Button mReverseButton;
     private Button mClockwiseButton;
     private Button mCounterClockwiseButton;
+    private SeekBar mSpeedBar;
 
     // Local Bluetooth Adapter:
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -71,7 +73,7 @@ public class ManualControlFragment extends Fragment {
             // Otherwise, setup the chat session
         } else if (mBluetoothService == null){
             mBluetoothService = new BluetoothService(getActivity(), mHandler);
-            initButtons();
+            initControls();
         }
     }
 
@@ -117,9 +119,10 @@ public class ManualControlFragment extends Fragment {
         mReverseButton = (Button) view.findViewById(R.id.button_reverse);
         mClockwiseButton = (Button) view.findViewById(R.id.button_right);
         mCounterClockwiseButton = (Button) view.findViewById(R.id.button_left);
+        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
     }
 
-    private void initButtons() {
+    private void initControls() {
         mForwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +147,23 @@ public class ManualControlFragment extends Fragment {
         mCounterClockwiseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 sendCounterClockwiseCommand();
+            }
+        });
+        mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                sendMessage(SegueAPI.getSetSpeedCommand(progress));
+                Log.d(TAG, "Setting speed to " + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }

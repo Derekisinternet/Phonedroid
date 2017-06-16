@@ -30,7 +30,15 @@ public class SegueAPI {
 //
 //    }
 
+    public static String getSetSpeedCommand(int speed) {
+        return assembleCommandWithParam(SegueAPIConstants.SET_SPEED, speed);
+
+    }
+
     public static String assembleCommand(String payload) {
         return "^" + payload + "\\n";
+    }
+    public static String assembleCommandWithParam(String payload, int param) {
+        return "^" + payload + param + "\\n";
     }
 }
