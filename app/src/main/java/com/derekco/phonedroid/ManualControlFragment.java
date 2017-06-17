@@ -35,12 +35,14 @@ public class ManualControlFragment extends Fragment {
     private static final int REQUEST_ENABLE_BT = 3;
 
     // Controller Interface:
-    private Button mForwardButton;
-    private Button mStopButton;
-    private Button mReverseButton;
-    private Button mClockwiseButton;
-    private Button mCounterClockwiseButton;
+//    private Button mForwardButton;
+//    private Button mStopButton;
+//    private Button mReverseButton;
+//    private Button mClockwiseButton;
+//    private Button mCounterClockwiseButton;
     private SeekBar mSpeedBar;
+
+    private JoystickView joystick;
 
     // Local Bluetooth Adapter:
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -62,6 +64,8 @@ public class ManualControlFragment extends Fragment {
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
         }
+
+        joystick = new JoystickView(this.getContext());
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ManualControlFragment extends Fragment {
             // Otherwise, setup the chat session
         } else if (mBluetoothService == null){
             mBluetoothService = new BluetoothService(getActivity(), mHandler);
-            initControls();
+//            initControls();
         }
     }
 
@@ -114,41 +118,41 @@ public class ManualControlFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mForwardButton = (Button) view.findViewById(R.id.button_forward);
-        mStopButton = (Button) view.findViewById(R.id.button_stop);
-        mReverseButton = (Button) view.findViewById(R.id.button_reverse);
-        mClockwiseButton = (Button) view.findViewById(R.id.button_right);
-        mCounterClockwiseButton = (Button) view.findViewById(R.id.button_left);
-        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
+//        mForwardButton = (Button) view.findViewById(R.id.button_forward);
+//        mStopButton = (Button) view.findViewById(R.id.button_stop);
+//        mReverseButton = (Button) view.findViewById(R.id.button_reverse);
+//        mClockwiseButton = (Button) view.findViewById(R.id.button_right);
+//        mCounterClockwiseButton = (Button) view.findViewById(R.id.button_left);
+//        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
     }
 
     private void initControls() {
-        mForwardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendForwardCommand();
-            }
-        });
-        mStopButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendBrakeCommand();
-            }
-        });
-        mReverseButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendReverseCommand();
-            }
-        });
-        mClockwiseButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendClockwiseCommand();
-            }
-        });
-        mCounterClockwiseButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                sendCounterClockwiseCommand();
-            }
-        });
+//        mForwardButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendForwardCommand();
+//            }
+//        });
+//        mStopButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                sendBrakeCommand();
+//            }
+//        });
+//        mReverseButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                sendReverseCommand();
+//            }
+//        });
+//        mClockwiseButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                sendClockwiseCommand();
+//            }
+//        });
+//        mCounterClockwiseButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                sendCounterClockwiseCommand();
+//            }
+//        });
         mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
