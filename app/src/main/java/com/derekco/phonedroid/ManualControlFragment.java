@@ -66,6 +66,14 @@ public class ManualControlFragment extends Fragment {
         }
 
         joystick = new JoystickView(this.getContext());
+        joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
+            @Override
+            public void onValueChanged(int angle, int power, int direction) {
+                Log.d(TAG, "New Angle: " + angle);
+                Log.d(TAG, "New Power: " + power);
+                sendJoystickValuesCommand(angle, power);
+            }
+        });
     }
 
     @Override
@@ -170,6 +178,17 @@ public class ManualControlFragment extends Fragment {
 
             }
         });
+    }
+
+    /**
+     * reference:
+     * 0 degrees - (1,0)
+     * 90 degrees - (0,1)
+     * 180 degrees - (-1, 0)
+     */
+    public void sendJoystickValuesCommand(int angle, int power) {
+        sendMessage(SegueAPI.getJoystickCommand(angle, power));
+        Log.d(TAG, "joystick reading: " + angle + " degrees at " + power + " power");
     }
 
     public void sendForwardCommand() {

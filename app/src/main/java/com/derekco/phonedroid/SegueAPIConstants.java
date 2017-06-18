@@ -13,4 +13,5 @@ public interface SegueAPIConstants {
     public static final String ADJUST_HEADING = "f";
     public static final String EXPLORE = "g";
     public static final String SET_SPEED = "h";
+    public static final String JOYSTICK = "i";
 }

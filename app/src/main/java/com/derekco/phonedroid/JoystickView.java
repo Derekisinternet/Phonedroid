@@ -8,14 +8,13 @@ import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 
 /**
  * Created by Mastermind on 6/15/17.
  */
 
-public class JoystickView extends SurfaceView implements Runnable {
+public class JoystickView extends View implements Runnable {
 
     /**
      CONSTANTS
@@ -39,7 +38,7 @@ public class JoystickView extends SurfaceView implements Runnable {
     private Thread thread = new Thread(this);
     private int lastAngle = 0; // angle of touch event
     private int lastPower = 0; // distance from event to center
-    private OnJoystickMoveListener onJoystickMoveListener; //self-explanatory?
+    private OnMoveListener onMoveListener; //self-explanatory?
 
     /**
     CONSTRUCTORS
@@ -102,22 +101,15 @@ public class JoystickView extends SurfaceView implements Runnable {
 
     public void drawJoystick(Canvas myCanvas) {
         setDimensions();
-        if (getHolder().getSurface().isValid()) {
-            Paint colors = new Paint();
-            myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clears background
-            colors.setARGB(255, 50, 50, 50); //Joystick base color
-            myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
-            colors.setARGB(255, 0, 0, 255); // Joystick top color
-            myCanvas.drawCircle(centerX, centerY, hatRadius, colors);
-            getHolder().unlockCanvasAndPost(myCanvas);
-            Log.d(TAG, "successfully rendered joystick");
-        } else {
-            Log.e(TAG, "Failed to render joystick");
-        }
+        Paint colors = new Paint();
+        myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clears background
+        colors.setARGB(255, 50, 50, 50); //Joystick base color
+        myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
+        colors.setARGB(255, 0, 0, 255); // Joystick top color
+        myCanvas.drawCircle(centerX, centerY, hatRadius, colors);
     }
 
     private void setDimensions() {
-        Log.d(TAG, "setting dimensions");
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         baseRadius = Math.min(getWidth(), getHeight()) / 3;
@@ -142,22 +134,23 @@ public class JoystickView extends SurfaceView implements Runnable {
             xPosish = (int) centerX;
             yPosish = (int) centerY;
             thread.interrupt();
-            if (onJoystickMoveListener != null) {
-                onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
+            if (onMoveListener != null) {
+                onMoveListener.onValueChanged(getAngle(), getPower(),
                         getDirection());
             }
         }
-        if (onJoystickMoveListener != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (onMoveListener != null && event.getAction() == MotionEvent.ACTION_DOWN) {
             if (thread != null && thread.isAlive()) {
                 thread.interrupt();
             }
             thread = new Thread(this);
             thread.start();
-            if (onJoystickMoveListener != null) {
-                onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
+            if (onMoveListener != null) {
+                onMoveListener.onValueChanged(getAngle(), getPower(),
                         getDirection());
             }
         }
+        Log.d(TAG, "new coordinates: (" + xPosish + ", " + yPosish + ")");
         return true;
     }
 
@@ -219,14 +212,14 @@ public class JoystickView extends SurfaceView implements Runnable {
         return direction;
     }
 
-    public void setOnJoystickMoveListener(OnJoystickMoveListener listener,
-                                          long repeatInterval) {
-        this.onJoystickMoveListener = listener;
-        this.loopInterval = repeatInterval;
+    public void setOnMoveListener(OnMoveListener listener) {
+        this.onMoveListener = listener;
+        //TODO: either remove this line, or create a method that also sets the loop interval
+        //this.loopInterval = repeatInterval;
     }
 
-    public interface OnJoystickMoveListener {
-        public void onValueChanged(int angle, int power, int direction);
+    public interface OnMoveListener {
+        void onValueChanged(int angle, int power, int direction);
     }
 
     @Override
@@ -234,8 +227,8 @@ public class JoystickView extends SurfaceView implements Runnable {
         while (!Thread.interrupted()) {
             post(new Runnable() {
                 public void run() {
-                    if (onJoystickMoveListener != null)
-                        onJoystickMoveListener.onValueChanged(getAngle(),
+                    if (onMoveListener != null)
+                        onMoveListener.onValueChanged(getAngle(),
                                 getPower(), getDirection());
                 }
             });
