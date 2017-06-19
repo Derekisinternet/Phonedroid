@@ -1,5 +1,7 @@
 package com.derekco.phonedroid;
 
+import java.util.Arrays;
+
 /**
  * Created by Mastermind on 6/3/17.
  */
@@ -36,12 +38,14 @@ public class SegueAPI {
     }
 
     public static String getJoystickCommand(int angle, int power) {
-        int motorL = getLeftMotorSpeed(angle, power);
-        int motorR = getRightMotorSpeed(angle, power);
-        return assembleCommandWithParam(SegueAPIConstants.JOYSTICK, angle);
+        int paramArray[] = new int[2];
+        paramArray[0] = getLeftMotorSpeed(angle, power);
+        paramArray[1] = getRightMotorSpeed(angle, power);
+
+        return assembleCommandWithArrayParam(SegueAPIConstants.JOYSTICK, paramArray);
     }
 
-    private static int getLeftMotorSpeed(int angle, int power) {
+    public static int getLeftMotorSpeed(int angle, int power) {
         int value = 0;
         // input sanitization, cause I'm paranoid:
         if (angle > 360) {
@@ -65,11 +69,12 @@ public class SegueAPI {
             value = (int) (power * ratio);
         } else if (angle > 270 && angle < 360) {
             float ratio = (angle - 270)/45; // zero to full forward
+            value = (int) (power * ratio);
         }
         return value;
     }
 
-    private static int getRightMotorSpeed(int angle, int power) {
+    public static int getRightMotorSpeed(int angle, int power) {
         int value = 0;
         // input sanitization, cause I'm paranoid:
         if (angle > 360) {
@@ -99,5 +104,13 @@ public class SegueAPI {
     }
     public static String assembleCommandWithParam(String payload, int param) {
         return "<" + payload + param + ">";
+    }
+    public static String assembleCommandWithArrayParam(String payload, int[] params) {
+        String paramString = "";
+        for (int param : params) {
+            paramString +=",";
+            paramString += param;
+        }
+        return "^" + payload + paramString + "\\n";
     }
 }
