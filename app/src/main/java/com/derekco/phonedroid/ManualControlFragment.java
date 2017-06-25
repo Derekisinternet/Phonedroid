@@ -64,16 +64,6 @@ public class ManualControlFragment extends Fragment {
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
         }
-
-        joystick = new JoystickView(this.getContext());
-        joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
-            @Override
-            public void onValueChanged(int angle, int power, int direction) {
-                Log.d(TAG, "New Angle: " + angle);
-                Log.d(TAG, "New Power: " + power);
-                sendJoystickValuesCommand(angle, power);
-            }
-        });
     }
 
     @Override
@@ -126,6 +116,17 @@ public class ManualControlFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        JoystickView.OnMoveListener listener = new JoystickView.OnMoveListener() {
+            @Override
+            public void onMove(int angle, int power, int direction) {
+                Log.d(TAG, "New Angle: " + angle);
+                Log.d(TAG, "New Power: " + power);
+                sendJoystickValuesCommand(angle, power);
+            }
+        };
+
+        joystick = (JoystickView) view.findViewById(R.id.joystick);
+        joystick.setOnMoveListener(listener);
 //        mForwardButton = (Button) view.findViewById(R.id.button_forward);
 //        mStopButton = (Button) view.findViewById(R.id.button_stop);
 //        mReverseButton = (Button) view.findViewById(R.id.button_reverse);

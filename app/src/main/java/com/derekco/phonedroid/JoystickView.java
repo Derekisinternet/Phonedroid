@@ -46,6 +46,11 @@ public class JoystickView extends View implements Runnable {
     public JoystickView(Context context) {
         super(context);
     }
+    public JoystickView(Context context, OnMoveListener listener) {
+
+        super(context);
+        onMoveListener = listener;
+    }
 
     public JoystickView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -103,7 +108,7 @@ public class JoystickView extends View implements Runnable {
         setDimensions();
         Paint colors = new Paint();
         myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clears background
-        colors.setARGB(255, 50, 50, 50); //Joystick base color
+        colors.setARGB(255, 100, 50, 50); //Joystick base color
         myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
         colors.setARGB(255, 0, 0, 255); // Joystick top color
         myCanvas.drawCircle(centerX, centerY, hatRadius, colors);
@@ -129,29 +134,41 @@ public class JoystickView extends View implements Runnable {
             xPosish = (int) (xDiff * baseRadius / abs + centerX);
             yPosish = (int) (yDiff * baseRadius / abs + centerY);
         }
-        invalidate();
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            xPosish = (int) centerX;
-            yPosish = (int) centerY;
+            Log.d(TAG, "ACTION_UP");
+            resetJoystickPosition();
             thread.interrupt();
-            if (onMoveListener != null) {
-                onMoveListener.onValueChanged(getAngle(), getPower(),
+            if (listenerNotNull()) {
+                Log.d(TAG, "signaling onMoveListener");
+                onMoveListener.onMove(getAngle(), getPower(),
                         getDirection());
+            } else {
+                Log.d(TAG, "onMoveListener not set");
             }
         }
-        if (onMoveListener != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            Log.d(TAG, "ACTION_DOWN");
             if (thread != null && thread.isAlive()) {
                 thread.interrupt();
             }
             thread = new Thread(this);
             thread.start();
-            if (onMoveListener != null) {
-                onMoveListener.onValueChanged(getAngle(), getPower(),
+            if (listenerNotNull()) {
+                Log.d(TAG, "signaling onMoveListener");
+                onMoveListener.onMove(getAngle(), getPower(),
                         getDirection());
+                Log.d(TAG, "new coordinates: (" + xPosish + ", " + yPosish + ")");
+            } else {
+                Log.d(TAG, "onMoveListener not set");
             }
         }
-        Log.d(TAG, "new coordinates: (" + xPosish + ", " + yPosish + ")");
+        invalidate();
         return true;
+    }
+
+    public void resetJoystickPosition() {
+        xPosish = (int) centerX;
+        yPosish = (int) centerY;
     }
 
     private int getAngle() {
@@ -212,14 +229,16 @@ public class JoystickView extends View implements Runnable {
         return direction;
     }
 
-    public void setOnMoveListener(OnMoveListener listener) {
-        this.onMoveListener = listener;
+    public synchronized void setOnMoveListener(OnMoveListener listener) {
+        onMoveListener = listener;
+//        Log.d(TAG, "onMoveListener Set!");
+//        Log.d (TAG, "onMove is not null: " + (onMoveListener != null));
         //TODO: either remove this line, or create a method that also sets the loop interval
-        //this.loopInterval = repeatInterval;
+        loopInterval = DEFAULT_LOOP_INTERVAL;
     }
 
     public interface OnMoveListener {
-        void onValueChanged(int angle, int power, int direction);
+        void onMove(int angle, int power, int direction);
     }
 
     @Override
@@ -227,8 +246,9 @@ public class JoystickView extends View implements Runnable {
         while (!Thread.interrupted()) {
             post(new Runnable() {
                 public void run() {
-                    if (onMoveListener != null)
-                        onMoveListener.onValueChanged(getAngle(),
+                    Log.d(TAG, "inside thread. onMoveListener exists? " + (listenerNotNull()));
+                    if (listenerNotNull())
+                        onMoveListener.onMove(getAngle(),
                                 getPower(), getDirection());
                 }
             });
@@ -239,5 +259,7 @@ public class JoystickView extends View implements Runnable {
             }
         }
     }
+
+    public boolean listenerNotNull() { return (this.onMoveListener != null);}
 
 }
