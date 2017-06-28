@@ -36,8 +36,6 @@ public class ManualControlFragment extends Fragment {
     // Controller Interface:
     private SeekBar mSpeedBar;
     private JoystickView joystick;
-    int previousAngle;
-    int previousPower;
 
     // Local Bluetooth Adapter:
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -109,18 +107,24 @@ public class ManualControlFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
         JoystickView.OnMoveListener listener = new JoystickView.OnMoveListener() {
+            int previousAngle;
+            int previousPower;
             @Override
             public void onMove(int angle, int power, int direction) {
-                Log.d(TAG, "New Angle: " + angle);
-                Log.d(TAG, "New Power: " + power);
 
-                // I put this in a separate method so that I could tweak sensitivity in the future.
-                if (joystickValuesMatchPrevious(angle, power)) {
+                if (!joystickValuesMatchPrevious(angle, power)) {
+                    Log.d(TAG, "sending joystick command");
                     sendJoystickValuesCommand(angle, power);
                     previousAngle = angle;
                     previousPower = power;
                 }
+            }
+
+            // I put this in a separate method so that I could tweak sensitivity in the future.
+            private boolean joystickValuesMatchPrevious(int angle, int power) {
+                return (angle == previousAngle && power == previousPower);
             }
         };
 
@@ -130,9 +134,7 @@ public class ManualControlFragment extends Fragment {
         mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
     }
 
-    private boolean joystickValuesMatchPrevious(int angle, int power) {
-        return (angle == previousAngle && power == previousPower);
-    }
+
 
     private void initControls() {
         mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
