@@ -30,7 +30,7 @@ public class JoystickViewTest {
     @Before
     public void initialize() {
         context = new FragmentActivity();
-        joystick = new JoystickView(context, listener);
+        joystick = new JoystickView(context);
 
     }
 

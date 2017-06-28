@@ -29,7 +29,7 @@ public class    MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             ManualControlFragment fragment = new ManualControlFragment();
-            transaction.replace(R.id.control_placeholder_fragment, fragment);
+            transaction.replace(R.id.magic_frame, fragment);
             transaction.commit();
         }
     }
