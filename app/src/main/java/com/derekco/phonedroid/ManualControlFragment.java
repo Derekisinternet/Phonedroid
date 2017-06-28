@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -35,14 +34,10 @@ public class ManualControlFragment extends Fragment {
     private static final int REQUEST_ENABLE_BT = 3;
 
     // Controller Interface:
-//    private Button mForwardButton;
-//    private Button mStopButton;
-//    private Button mReverseButton;
-//    private Button mClockwiseButton;
-//    private Button mCounterClockwiseButton;
     private SeekBar mSpeedBar;
-
     private JoystickView joystick;
+    int previousAngle;
+    int previousPower;
 
     // Local Bluetooth Adapter:
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -57,7 +52,6 @@ public class ManualControlFragment extends Fragment {
         setHasOptionsMenu(true);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             FragmentActivity activity = getActivity();
@@ -75,7 +69,7 @@ public class ManualControlFragment extends Fragment {
             // Otherwise, setup the chat session
         } else if (mBluetoothService == null){
             mBluetoothService = new BluetoothService(getActivity(), mHandler);
-//            initControls();
+            initControls();
         }
     }
 
@@ -94,7 +88,6 @@ public class ManualControlFragment extends Fragment {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-            // Otherwise, setup the chat session
         }
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
@@ -121,47 +114,27 @@ public class ManualControlFragment extends Fragment {
             public void onMove(int angle, int power, int direction) {
                 Log.d(TAG, "New Angle: " + angle);
                 Log.d(TAG, "New Power: " + power);
-                sendJoystickValuesCommand(angle, power);
+
+                // I put this in a separate method so that I could tweak sensitivity in the future.
+                if (joystickValuesMatchPrevious(angle, power)) {
+                    sendJoystickValuesCommand(angle, power);
+                    previousAngle = angle;
+                    previousPower = power;
+                }
             }
         };
 
         joystick = (JoystickView) view.findViewById(R.id.joystick);
         joystick.setOnMoveListener(listener);
-//        mForwardButton = (Button) view.findViewById(R.id.button_forward);
-//        mStopButton = (Button) view.findViewById(R.id.button_stop);
-//        mReverseButton = (Button) view.findViewById(R.id.button_reverse);
-//        mClockwiseButton = (Button) view.findViewById(R.id.button_right);
-//        mCounterClockwiseButton = (Button) view.findViewById(R.id.button_left);
-//        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
+        joystick.resetJoystickPosition(); // otherwise the view inits in a weird posish.
+        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
+    }
+
+    private boolean joystickValuesMatchPrevious(int angle, int power) {
+        return (angle == previousAngle && power == previousPower);
     }
 
     private void initControls() {
-//        mForwardButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sendForwardCommand();
-//            }
-//        });
-//        mStopButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                sendBrakeCommand();
-//            }
-//        });
-//        mReverseButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                sendReverseCommand();
-//            }
-//        });
-//        mClockwiseButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                sendClockwiseCommand();
-//            }
-//        });
-//        mCounterClockwiseButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                sendCounterClockwiseCommand();
-//            }
-//        });
         mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -190,31 +163,6 @@ public class ManualControlFragment extends Fragment {
     public void sendJoystickValuesCommand(int angle, int power) {
         sendMessage(SegueAPI.getJoystickCommand(angle, power));
         Log.d(TAG, "joystick reading: " + angle + " degrees at " + power + " power");
-    }
-
-    public void sendForwardCommand() {
-        sendMessage(SegueAPI.getForwardCommand());
-        Log.d(TAG, "Forward Button Press: " + SegueAPI.getForwardCommand());
-    }
-
-    public void sendBrakeCommand() {
-        Log.d(TAG, "Brake Button Press!");
-        sendMessage(SegueAPI.getBrakeCommand());
-    }
-
-    public void sendReverseCommand() {
-        Log.d(TAG, "Reverse Button Press!");
-        sendMessage(SegueAPI.getReverseCommand());
-    }
-
-    public void sendClockwiseCommand() {
-        Log.d(TAG, "Clockwise Button Press!");
-        sendMessage(SegueAPI.getClockwiseCommand());
-    }
-
-    public void sendCounterClockwiseCommand() {
-        Log.d(TAG, "CounterClockwise Button Press!");
-        sendMessage(SegueAPI.getCounterClockwiseCommand());
     }
 
     /**

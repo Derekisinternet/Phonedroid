@@ -46,24 +46,23 @@ public class JoystickView extends View implements Runnable {
     public JoystickView(Context context) {
         super(context);
     }
-    public JoystickView(Context context, OnMoveListener listener) {
 
-        super(context);
-        onMoveListener = listener;
-    }
-
+    // Constructor called when the Joystickview is inflated from XML:
     public JoystickView(Context context, AttributeSet attributes) {
         super(context, attributes);
+        initJoystickCoordinates();
+
     }
 
     public JoystickView(Context context, AttributeSet attributes, int style) {
         super(context, attributes, style);
+        initJoystickCoordinates();
     }
 
-//    @Override
-//    protected void onFinishInflate() {
-//
-//    }
+    void initJoystickCoordinates() {
+        setDimensions();
+        resetJoystickPosition();
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -111,7 +110,7 @@ public class JoystickView extends View implements Runnable {
         colors.setARGB(255, 100, 50, 50); //Joystick base color
         myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
         colors.setARGB(255, 0, 0, 255); // Joystick top color
-        myCanvas.drawCircle(centerX, centerY, hatRadius, colors);
+        myCanvas.drawCircle(xPosish, yPosish, hatRadius, colors);
     }
 
     private void setDimensions() {
@@ -140,6 +139,7 @@ public class JoystickView extends View implements Runnable {
             thread.interrupt();
             if (listenerNotNull()) {
                 Log.d(TAG, "signaling onMoveListener");
+
                 onMoveListener.onMove(getAngle(), getPower(),
                         getDirection());
             } else {
@@ -246,7 +246,6 @@ public class JoystickView extends View implements Runnable {
         while (!Thread.interrupted()) {
             post(new Runnable() {
                 public void run() {
-                    Log.d(TAG, "inside thread. onMoveListener exists? " + (listenerNotNull()));
                     if (listenerNotNull())
                         onMoveListener.onMove(getAngle(),
                                 getPower(), getDirection());
