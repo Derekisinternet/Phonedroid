@@ -47,54 +47,38 @@ public class SegueAPI {
 
     public static int getLeftMotorSpeed(int angle, int power) {
         int value = 0;
-        // input sanitization, cause I'm paranoid:
-        if (angle > 360) {
-            angle = angle - 360;
-        } else if (angle < -360) {
-            angle = angle + 360;
-        }
 
-        if (angle >= 0 && angle <= 90) {
-            value = power;
-        } else if ( angle > 90 && angle <= 135) {
-            float ratio = (135 - angle)/45; // from full forward to zero
+        // 0-90 degrees: forward to clockwise
+        // 91-180 degrees: clockwise to reverse
+        // -180 to -90 degrees: reverse to counterclockwise
+        // -91 to -1 degrees: counterclockwise to forward
+        if (angle >= 0 && angle <= 90) { // forward to clockwise rotation
+            value = power; // full forward the whole time
+        } else if (angle > 90 && angle <= 180) {
+            float ratio = (angle - 135)/-45; // from full forward to zero to full reverse
             value = (int) (power * ratio);
-        } else if (angle > 135 && angle <= 180) {
-            float ratio = (angle -135)/-45; // from zero to full reverse
+        } else if (angle < 0 && angle >= -90) {
+            float ratio = (45 + angle)/45; // from full forward to zero to full reverse
             value = (int) (power * ratio);
-        } else if (angle > 180 && angle <= 270) {
-            value = power * -1;
-        } else if (angle > 270 && angle <= 315) {
-            float ratio = (270 - angle)/-270; // full reverse to zero
-            value = (int) (power * ratio);
-        } else if (angle > 270 && angle < 360) {
-            float ratio = (angle - 270)/45; // zero to full forward
-            value = (int) (power * ratio);
+        } else if (angle < -90 && angle >= -180) {
+            value = power * -1; // full reverse the whole time
         }
         return value;
     }
 
     public static int getRightMotorSpeed(int angle, int power) {
         int value = 0;
-        // input sanitization, cause I'm paranoid:
-        if (angle > 360) {
-            angle = angle - 360;
-        } else if (angle < -360) {
-            angle = angle + 360;
-        }
-        if (angle >= 0 && angle <=45) {
-            float ratio = (angle - 45)/45; // full reverse to zero
+
+        if (angle >= 0 && angle <= 90) {
+            float ratio = (45 - angle)/45; // full forward to zero to full reverse
             value = (int) (power * ratio);
-        } else if (angle > 45 && angle <= 180) {
-            value = power; // full forward
-        } else if (angle > 180 && angle <= 225) {
-            float ratio =  (225 - angle)/45; //full forward to zero
+        } else if (angle > 90 && angle <= 180) {
+            value = power * -1; // full reverse the whole time
+        } else if (angle < 0 && angle >= -90) {
+            value = power; //full forward the whole time
+        } else if (angle < -90 && angle >= -180) {
+            float ratio = (angle + 135)/45;  // forward zero to full reverse
             value = (int) (power * ratio);
-        } else if (angle > 225 && angle <= 270) {
-            float ratio = (angle - 225)/-45;  // zero to full reverse
-            value = (int) (power * ratio);
-        } else if (angle > 270 && angle < 360) {
-            value = power * -1;
         }
         return value;
     }

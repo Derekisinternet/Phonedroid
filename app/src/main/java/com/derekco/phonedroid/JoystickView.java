@@ -202,7 +202,12 @@ public class JoystickView extends View implements Runnable {
     }
 
     private int getPower() {
-        return (int) (100 * Math.sqrt(xDiff * xDiff + yDiff * yDiff) / baseRadius);
+        int reading = (int) (100 * Math.sqrt(xDiff * xDiff + yDiff * yDiff) / baseRadius);
+        if (reading > 100) {
+            return 100;
+        } else {
+            return reading;
+        }
     }
 
 
