@@ -55,10 +55,10 @@ public class SegueAPI {
         if (angle >= 0 && angle <= 90) { // forward to clockwise rotation
             value = power; // full forward the whole time
         } else if (angle > 90 && angle <= 180) {
-            float ratio = (angle - 135)/-45; // from full forward to zero to full reverse
+            float ratio = (angle - 135)/-45.0f; // from full forward to zero to full reverse
             value = (int) (power * ratio);
         } else if (angle < 0 && angle >= -90) {
-            float ratio = (45 + angle)/45; // from full forward to zero to full reverse
+            float ratio = (45 + angle)/45.0f; // from full forward to zero to full reverse
             value = (int) (power * ratio);
         } else if (angle < -90 && angle >= -180) {
             value = power * -1; // full reverse the whole time
@@ -70,14 +70,14 @@ public class SegueAPI {
         int value = 0;
 
         if (angle >= 0 && angle <= 90) {
-            float ratio = (45 - angle)/45; // full forward to zero to full reverse
+            float ratio = (45 - angle)/45.0f; // full forward to zero to full reverse
             value = (int) (power * ratio);
         } else if (angle > 90 && angle <= 180) {
             value = power * -1; // full reverse the whole time
         } else if (angle < 0 && angle >= -90) {
             value = power; //full forward the whole time
         } else if (angle < -90 && angle >= -180) {
-            float ratio = (angle + 135)/45;  // forward zero to full reverse
+            float ratio = (angle + 135)/45.0f;  // forward zero to full reverse
             value = (int) (power * ratio);
         }
         return value;
