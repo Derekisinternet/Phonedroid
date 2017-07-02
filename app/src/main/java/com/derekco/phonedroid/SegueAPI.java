@@ -95,6 +95,6 @@ public class SegueAPI {
             paramString +=",";
             paramString += param;
         }
-        return "^" + payload + paramString + "\\n";
+        return "<" + payload + paramString + ">";
     }
 }

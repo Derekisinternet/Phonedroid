@@ -60,7 +60,7 @@ public class SegueAPITest {
 
     @Test
     public void JoystickStringTest() {
-        String payload = "^i,100,0\\n";
+        String payload = "<i,100,0>";
         assertEquals(payload, SegueAPI.getJoystickCommand(45, 100));
     }
 }

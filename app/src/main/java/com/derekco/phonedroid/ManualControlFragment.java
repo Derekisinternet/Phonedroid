@@ -114,7 +114,9 @@ public class ManualControlFragment extends Fragment {
             @Override
             public void onMove(int angle, int power, int direction) {
 
-                if (!joystickValuesMatchPrevious(angle, power)) {
+                if (direction == 0) {
+                    sendMessage(SegueAPI.getBrakeCommand());
+                } else if (!joystickValuesMatchPrevious(angle, power)) {
                     Log.d(TAG, "sending joystick command");
                     sendJoystickValuesCommand(angle, power);
                     previousAngle = angle;
