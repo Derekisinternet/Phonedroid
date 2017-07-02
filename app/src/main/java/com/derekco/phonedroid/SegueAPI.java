@@ -87,7 +87,7 @@ public class SegueAPI {
         return "<" + payload + ">";
     }
     public static String assembleCommandWithParam(String payload, int param) {
-        return "<" + payload + param + ">";
+        return "<" + payload + "," + param + ">";
     }
     public static String assembleCommandWithArrayParam(String payload, int[] params) {
         String paramString = "";
