@@ -109,7 +109,7 @@ public class JoystickView extends View implements Runnable {
         myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clears background
         colors.setARGB(255, 100, 50, 50); //Joystick base color
         myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
-        colors.setARGB(255, 0, 0, 255); // Joystick top color
+        colors.setARGB(255, 255, 0, 0); // Joystick top color
         myCanvas.drawCircle(xPosish, yPosish, hatRadius, colors);
     }
 
@@ -117,7 +117,7 @@ public class JoystickView extends View implements Runnable {
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         baseRadius = Math.min(getWidth(), getHeight()) / 3;
-        hatRadius = Math.min(getWidth(), getHeight()) / 5;
+        hatRadius = Math.min(getWidth(), getHeight()) / 6;
 
     }
 

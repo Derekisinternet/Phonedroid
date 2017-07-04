@@ -28,9 +28,7 @@ public class SegueAPI {
         return assembleCommand(SegueAPIConstants.COUNTERCLOCKWISE);
     }
 
-//    public static String getHeadingAdjustmentCommand(int param) {
-//
-//    }
+    public static String getNeutralCommand() {return assembleCommand(SegueAPIConstants.NEUTRAL);}
 
     public static String getSetSpeedCommand(int speed) {
         return assembleCommandWithParam(SegueAPIConstants.SET_SPEED, speed);

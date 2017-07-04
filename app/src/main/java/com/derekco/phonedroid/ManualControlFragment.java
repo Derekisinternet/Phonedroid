@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class ManualControlFragment extends Fragment {
 
     // Controller Interface:
     private SeekBar mSpeedBar;
+    private Button mBrakeButton;
     private JoystickView joystick;
 
     // Local Bluetooth Adapter:
@@ -108,6 +110,36 @@ public class ManualControlFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
+        joystick = (JoystickView) view.findViewById(R.id.joystick);
+
+        joystick.resetJoystickPosition(); // otherwise the view inits in a weird posish.
+        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
+        mBrakeButton = (Button) view.findViewById(R.id.button_brake);
+    }
+
+
+
+    private void initControls() {
+        // SET SPEEDBAR CONTROLS
+        mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                sendMessage(SegueAPI.getSetSpeedCommand(progress));
+                Log.d(TAG, "Setting speed to " + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        // SET JOYSTICK CONTROLS
         JoystickView.OnMoveListener listener = new JoystickView.OnMoveListener() {
             int previousAngle;
             int previousPower;
@@ -129,40 +161,21 @@ public class ManualControlFragment extends Fragment {
                 return (angle == previousAngle && power == previousPower);
             }
         };
-
-        joystick = (JoystickView) view.findViewById(R.id.joystick);
         joystick.setOnMoveListener(listener);
-        joystick.resetJoystickPosition(); // otherwise the view inits in a weird posish.
-        mSpeedBar = (SeekBar) view.findViewById(R.id.speedBar);
-    }
 
-
-
-    private void initControls() {
-        mSpeedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        // SET BRAKE BUTTON CONTROLS
+        mBrakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                sendMessage(SegueAPI.getSetSpeedCommand(progress));
-                Log.d(TAG, "Setting speed to " + progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+            public void onClick(View v) {
+                sendMessage(SegueAPI.getBrakeCommand());
+                Log.d(TAG, "Brake Button Pressed!");
             }
         });
+
     }
 
     /**
-     * reference:
-     * 0 degrees - (1,0)
-     * 90 degrees - (0,1)
-     * 180 degrees - (-1, 0)
+     * In hindsight, not sure why I wrapped this in a method . . .
      */
     public void sendJoystickValuesCommand(int angle, int power) {
         sendMessage(SegueAPI.getJoystickCommand(angle, power));
