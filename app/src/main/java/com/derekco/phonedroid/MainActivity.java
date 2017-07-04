@@ -13,8 +13,6 @@ public class    MainActivity extends AppCompatActivity {
     public static final String COMMAND_TYPE = "com.derekco.phonedroid.COMMAND_TYPE";
     private final String TAG = "MainActivity";
 
-    // Whether the Log Fragment is currently shown
-    private boolean mLogShown;
 
     /**
      * Name of the connected device

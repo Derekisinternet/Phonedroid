@@ -228,9 +228,9 @@ public class JoystickView extends View implements Runnable {
 
         int direction = (int) (((a + 22) / 45) + 1);
 
-        if (direction > 8) {
-            direction = 1;
-        }
+//        if (direction > 8) {
+//            direction = 1;
+//        }
         return direction;
     }
 
