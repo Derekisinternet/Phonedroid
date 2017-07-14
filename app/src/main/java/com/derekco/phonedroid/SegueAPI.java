@@ -36,9 +36,9 @@ public class SegueAPI {
     }
 
     public static String assembleCommand(String payload) {
-        return "^" + payload + "\\n";
+        return "<" + payload + ">";
     }
     public static String assembleCommandWithParam(String payload, int param) {
-        return "^" + payload + param + "\\n";
+        return "<" + payload + param + ">";
     }
 }
